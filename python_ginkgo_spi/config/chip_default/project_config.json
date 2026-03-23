@@ -1,0 +1,8 @@
+{
+  "project_name": "chip_default",
+  "register_fields_file": "config/active/register_fields.json",
+  "registers_file": "config/active/registers.json",
+  "spi_config_file": "config/active/spi_config.json",
+  "output_dir": "outputs",
+  "log_dir": "logs"
+}
