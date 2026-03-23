@@ -50,8 +50,3 @@ A placeholder file is reserved at `instruments/inst_5052b.py`.
 
 ## Restructured layout
 This package was reorganized into `driver/`, `protocol/`, `core/`, `scripts/`, `tests/`, and `config/` with portable VSCode settings under `.vscode/`. Existing original paths were preserved for compatibility.
-
-
-## GitHub Monorepo Notes
-
-该目录用于沉淀 Ginkgo + Python 的 SPI 通信能力，推荐保持为可独立运行的子工程。
