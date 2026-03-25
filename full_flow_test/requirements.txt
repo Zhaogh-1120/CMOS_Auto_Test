@@ -1,2 +1,2 @@
-../python_ginkgo_spi
-../e5052b_capture
+xlsxwriter
+pillow

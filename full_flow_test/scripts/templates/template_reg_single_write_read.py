@@ -1,0 +1,15 @@
+from protocol.chip_spi import ChipSpi
+from core.formatter import print_block, format_reg_verify
+
+
+def main():
+    with ChipSpi() as chip:
+        reg = 0x20
+        write_value = 0x05
+        read_value, raw_rx = chip.write_then_read(reg, write_value)
+        result = "PASS" if read_value == write_value else "FAIL"
+        print_block(format_reg_verify(reg, write_value, raw_rx, read_value, result))
+
+
+if __name__ == "__main__":
+    main()

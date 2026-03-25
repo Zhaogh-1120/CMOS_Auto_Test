@@ -1,0 +1,13 @@
+{
+  "host": "192.168.18.58",
+  "port": 5025,
+  "timeout_s": 15,
+  "default_output_dir": "outputs/e5052b",
+  "save_screenshot": true,
+  "save_csv": true,
+  "save_excel": true,
+  "delay_before_capture_s": 0.0,
+  "freeze_before_capture": true,
+  "resume_after_capture": true,
+  "key_offsets_hz": [100.0, 1000.0, 10000.0, 100000.0, 400000.0, 1000000.0, 10000000.0, 20000000.0, 40000000.0]
+}

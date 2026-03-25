@@ -1,0 +1,11 @@
+{
+  "DEBUG": false,
+  "CONTINUE_ON_ERROR": false,
+  "SPI_RETRY_ON_FAIL": false,
+  "SPI_RETRY_COUNT": 1,
+  "SPI_RETRY_DELAY_S": 0.05,
+  "STRICT_SPI_LINK_CHECK": false,
+  "MAX_CONSECUTIVE_SPI_FAILS": 3,
+  "CONTINUE_ON_DEVICE_LOSS": false,
+  "RAISE_ON_SPI_VERIFY_FAIL": false
+}
