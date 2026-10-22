@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -27,6 +28,15 @@ class RegisterMap:
         with open(json_path, "r", encoding="utf-8") as f:
             raw = json.load(f)
         self.fields = [FieldDef(**item) for item in raw]
+        # Register-name aliases come from config/registers.json; the fallback
+        # REGxx notation always interprets xx as a 2-digit HEX address.
+        reg_names_path = Path(json_path).parent / "registers.json"
+        if not reg_names_path.exists():
+            reg_names_path = Path(__file__).resolve().parent.parent / "config" / "registers.json"
+        with open(reg_names_path, "r", encoding="utf-8") as f:
+            register_names = json.load(f)
+        self._register_names = {str(key).upper(): int(entry["addr"])
+                                for key, entry in register_names.items()}
         self._by_name = {}
         self._by_alias = {}
         for field in self.fields:
@@ -43,6 +53,21 @@ class RegisterMap:
                 (self.defaults_by_address[field.address] & ~field.mask)
                 | ((field.default_decimal << field.lsb) & field.mask)
             )
+
+    def resolve_register_name(self, name: str) -> int | None:
+        """Return a register address for named REG aliases; None for non-REG field names."""
+        key = name.strip().upper()
+        if key in self._register_names:
+            addr = self._register_names[key]
+            if not 0 <= addr <= 0xFF:
+                raise ValueError(f"Register name {name} has invalid address {addr}")
+            return addr
+        # Allow REG00, REG20, REG2F, REGA0, etc., independent of JSON coverage.
+        if re.fullmatch(r"REG[0-9A-F]{2}", key):
+            return int(key[3:], 16)
+        if key.startswith("REG"):
+            raise KeyError(f"Invalid register name {name!r}; use REG00..REGFF (hex)")
+        return None
 
     def resolve(self, name: str) -> FieldDef:
         key = name.strip().upper()

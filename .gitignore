@@ -1,0 +1,6 @@
+# Python compiled files
+__pycache__/
+*.py[cod]
+
+# Python testing cache
+.pytest_cache/

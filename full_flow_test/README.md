@@ -6,7 +6,9 @@ This project keeps SPI control and E5052B phase-noise capture decoupled, then co
 - control_mode = 0
 - cpol = 0
 - cpha = 0
-- read protocol = `80 [addr]`
+- read protocol = `00 [addr]` (Set Address, its own CS frame), then `80 00` (Read Data + dummy, a second CS frame)
+- read only: these frames do **not** issue a Write Data command or overwrite the chip's register
+- optional CLI: `--address-cmd 0x1F` to try another documented `000x xxxx` Set Address encoding (default preserves known-working `0x00`)
 - readback byte = `raw_rx[1]`
 
 ## Layout
@@ -94,3 +96,7 @@ outputs/
 - `scripts/basic/` and `scripts/loops/` remain pure SPI. They do not attach a hook by default.
 - `scripts/fullflow/` is where case orchestration lives.
 - Update `config/instrument/e5052b_config.json` before running against your instrument.
+
+## 2026-10-22 command enhancement
+
+Please see [`SPI_COMMAND_UPDATE_使用说明.md`](SPI_COMMAND_UPDATE_使用说明.md): unified `read --reg`/`read --name REG20`/`read --name FIELD`, binary/hex/decimal inputs, `value_bin=2b...` display, bounds validation, and read-only `--dry-run` previews.
