@@ -10,7 +10,7 @@ with ChipSpi() as chip:
     chip.transfer(bytes([0x00, REG]))
     print(f"Step 2/5: write data frame    -> [40 {VALUE:02X}]")
     chip.transfer(bytes([0x40, VALUE]))
-    print(f"Step 3/5: read frame          -> [80 {REG:02X}]")
+    print(f"Step 3/5: read frames         -> [00 {REG:02X}] + [80 00] (two separate CS cycles)")
     rx = chip.read_reg_raw(REG)
     print(f"Step 4/5: raw SDO bytes      -> {rx.hex(' ')}")
     read_value = chip.decode_read_value(rx)

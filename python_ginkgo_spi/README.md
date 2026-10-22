@@ -6,7 +6,9 @@ This version adds direct field-name operations based on your uploaded register l
 - control_mode = 0
 - cpol = 0
 - cpha = 0
-- read protocol = `80 [addr]`
+- read protocol = `00 [addr]` (Set Address, its own CS frame), then `80 00` (Read Data + dummy, a second CS frame)
+- read only: these frames do **not** issue a Write Data command or overwrite the chip's register
+- optional CLI: `--address-cmd 0x1F` to try another documented `000x xxxx` Set Address encoding (default preserves known-working `0x00`)
 - readback byte = `raw_rx[1]`
 
 ## New capability
@@ -50,3 +52,7 @@ A placeholder file is reserved at `instruments/inst_5052b.py`.
 
 ## Restructured layout
 This package was reorganized into `driver/`, `protocol/`, `core/`, `scripts/`, `tests/`, and `config/` with portable VSCode settings under `.vscode/`. Existing original paths were preserved for compatibility.
+
+## 2026-10-22 command enhancement
+
+Please see [`SPI_COMMAND_UPDATE_使用说明.md`](SPI_COMMAND_UPDATE_使用说明.md): unified `read --reg`/`read --name REG20`/`read --name FIELD`, binary/hex/decimal inputs, `value_bin=2b...` display, bounds validation, and read-only `--dry-run` previews.
