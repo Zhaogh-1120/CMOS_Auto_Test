@@ -2,7 +2,7 @@
 
 本文档记录 CMOS_Auto_Test 工程的主要功能变化。旧版工程、并联谐振打包版与 GitHub `main` 的文件内容均已用于比对；未将仅由缓存、历史实验文件或压缩包整理造成的差异描述为新功能。
 
-## [0.2.0] - 2026-10-24 — Parallel SAW Test Integration
+## [0.3.0] - 2026-10-24 — Parallel SAW Test Integration
 
 ### Added — 并联谐振芯片适配
 - 在 `full_flow_test` 中引入并联谐振 SAW 芯片的寄存器映射：REG05–REG14 共 16 个地址、35 个 Field。
