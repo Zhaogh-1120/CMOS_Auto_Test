@@ -25,6 +25,7 @@ def _formats(workbook):
     return {
         'header': workbook.add_format({'font_name': 'DengXian', 'font_size': 10, 'bold': True, 'font_color': 'white', 'bg_color': '#1F4E78', 'border': 1, 'align': 'center', 'valign': 'vcenter'}),
         'cell': workbook.add_format({'font_name': 'DengXian', 'font_size': 10, 'border': 1, 'align': 'center', 'valign': 'vcenter'}),
+        'frequency_mhz': workbook.add_format({'font_name': 'DengXian', 'font_size': 10, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'num_format': '0.000000'}),
         'cell_num': workbook.add_format({'font_name': 'DengXian', 'font_size': 10, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'num_format': '0.000000'}),
         'note_hdr': workbook.add_format({'font_name': 'DengXian', 'font_size': 10, 'bold': True, 'bg_color': '#D9EAF7', 'border': 1}),
         'note': workbook.add_format({'font_name': 'DengXian', 'font_size': 10, 'bg_color': '#FCE4D6', 'border': 1, 'text_wrap': True}),
@@ -74,7 +75,7 @@ def _write_summary_sheet(workbook, result: E5052BCaptureResult):
     for c, h in enumerate(headers):
         ws.write(0, c, h, fmt['header'])
     for c, v in enumerate(values):
-        ws.write(1, c, v, fmt['cell'])
+        ws.write(1, c, v, fmt['frequency_mhz'] if headers[c] == 'output_frequency_mhz' else fmt['cell'])
     ws.set_row(0, 22)
     ws.set_row(1, 22)
     ws.freeze_panes(1, 0)
@@ -284,7 +285,7 @@ def export_merged_summary(records: Sequence[dict], path: Path) -> Path:
                     value = rec.get(h)
                 if isinstance(value, (dict, list, tuple)):
                     value = json.dumps(value, ensure_ascii=False)
-                ws.write(r, c, value, fmt['cell'])
+                ws.write(r, c, value, fmt['frequency_mhz'] if h in ('e5052b_output_frequency_mhz', 'output_frequency_mhz') else fmt['cell'])
 
         ws.freeze_panes(1, 0)
         ws.autofilter(0, 0, len(records), len(headers) - 1)

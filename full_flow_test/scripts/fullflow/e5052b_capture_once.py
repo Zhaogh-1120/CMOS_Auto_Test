@@ -38,6 +38,7 @@ CASE_DESC = 'single E5052B capture without SPI actions'
 # ----- Full-flow switches -----
 ENABLE_MEASUREMENT = True
 SAVE_SCREENSHOT = True
+#SAVE_SCREENSHOT = False
 SAVE_CSV = True
 SAVE_EXCEL = True
 DELAY_BEFORE_CAPTURE_S = None  # None -> use config file default

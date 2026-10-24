@@ -18,7 +18,7 @@ class FakeSpiError(RuntimeError):
 
 class FakeBus:
     def __init__(self):
-        self.regs = {0x20: 0xAC, 0x21: 0x37}
+        self.regs = {0x20: 0xAC, 0x21: 0x37, 0x05: 0x08, 0x06: 0x1B, 0x07: 0xB5, 0x08: 0x4C}
         self.addr = 0
         self.frames = []
         self.fail_next_write = False

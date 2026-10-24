@@ -61,7 +61,7 @@ class CommandEnhancementTests(unittest.TestCase):
         self.assert_read_only()
 
     def test_read_by_field_name(self):
-        out, _ = self.run_cli("read", "--name", "CFG_OSC2_IDAC_IBIAS")
+        out, _ = self.run_cli("read", "--name", "CFG_OSC_IDAC_IBIAS")
         self.assertIn("FIELD_READ", out)
         self.assertIn("value_dec=21", out)
         self.assertIn("value_hex=0x15", out)
@@ -69,7 +69,7 @@ class CommandEnhancementTests(unittest.TestCase):
         self.assert_read_only()
 
     def test_legacy_field_read_kept(self):
-        out, _ = self.run_cli("field-read", "--name", "CFG_OSC2_GMP_NUM")
+        out, _ = self.run_cli("field-read", "--name", "CFG_OSC_SEL_TEST")
         self.assertIn("value_bin=2b100", out)
 
     def test_read_second_reg_without_data_write(self):
@@ -88,9 +88,9 @@ class CommandEnhancementTests(unittest.TestCase):
     def test_write_field_three_bases(self):
         for user_value in ("10", "0x0A", "0b01010"):
             self.setUp()
-            self.run_cli("field-write-read", "--name", "CFG_OSC2_IDAC_IBIAS", "--value", user_value)
-            expected = (0xAC & 0x07) | (10 << 3)
-            self.assertEqual(self.bus.regs[0x20], expected)
+            self.run_cli("field-write-read", "--name", "CFG_OSC_IDAC_IBIAS", "--value", user_value)
+            expected = (0xB5 & 0xE0) | 10
+            self.assertEqual(self.bus.regs[0x07], expected)
             self.assertEqual(self.bus.frames[3], ("write", bytes([0x40, expected])))
 
     def test_reg_dry_run_never_writes_reg_data(self):
@@ -107,14 +107,14 @@ class CommandEnhancementTests(unittest.TestCase):
         self.assert_read_only()
 
     def test_field_dry_run_preserves_other_bits(self):
-        out, _ = self.run_cli("field-write", "--name", "CFG_OSC2_IDAC_IBIAS", "--value", "0b01010", "--dry-run")
-        self.assertIn("after_reg=0x54", out)  # old lower 3 bits = 100
-        self.assertEqual(self.bus.regs[0x20], 0xAC)
+        out, _ = self.run_cli("field-write", "--name", "CFG_OSC_IDAC_IBIAS", "--value", "0b01010", "--dry-run")
+        self.assertIn("after_reg=0xAA", out)  # preserve REG07 upper 3 bits
+        self.assertEqual(self.bus.regs[0x07], 0xB5)
         self.assert_read_only()
 
     def test_field_write_read_dry_run_no_write(self):
-        out, _ = self.run_cli("field-write-read", "--name", "CFG_OSC2_GMP_NUM", "--value", "5", "--dry-run")
-        self.assertIn("after_reg=0xAD", out)
+        out, _ = self.run_cli("field-write-read", "--name", "CFG_OSC_SEL_TEST", "--value", "5", "--dry-run")
+        self.assertIn("after_reg=0x4D", out)
         self.assert_read_only()
 
     def test_reg_sweep_dry_run_once_read(self):
@@ -124,13 +124,13 @@ class CommandEnhancementTests(unittest.TestCase):
         self.assertEqual(self.bus.regs[0x20], 0xAC)
 
     def test_field_sweep_dry_run_unchanged_low_bits(self):
-        out, _ = self.run_cli("field-sweep", "--name", "CFG_OSC2_IDAC_IBIAS", "--start", "0", "--stop", "0x04", "--step", "0b10", "--dry-run")
+        out, _ = self.run_cli("field-sweep", "--name", "CFG_OSC_IDAC_IBIAS", "--start", "0", "--stop", "0x04", "--step", "0b10", "--dry-run")
         self.assertEqual(out.count("DRY_RUN"), 3)
-        self.assertIn("after_reg=0x04", out)
-        self.assertIn("after_reg=0x14", out)
-        self.assertIn("after_reg=0x24", out)
+        self.assertIn("after_reg=0xA0", out)
+        self.assertIn("after_reg=0xA2", out)
+        self.assertIn("after_reg=0xA4", out)
         self.assertEqual(len(self.bus.frames), 2)
-        self.assertEqual(self.bus.regs[0x20], 0xAC)
+        self.assertEqual(self.bus.regs[0x07], 0xB5)
 
     def test_reg_sweep_binary_live(self):
         out, _ = self.run_cli("sweep", "--reg", "0x20", "--start", "0b0", "--stop", "0b10", "--step", "1")
@@ -138,9 +138,9 @@ class CommandEnhancementTests(unittest.TestCase):
         self.assertEqual(self.bus.regs[0x20], 2)
 
     def test_field_sweep_hex_live(self):
-        out, _ = self.run_cli("field-sweep", "--name", "CFG_OSC2_GMP_NUM", "--start", "0x01", "--stop", "0x03")
+        out, _ = self.run_cli("field-sweep", "--name", "CFG_OSC_SEL_TEST", "--start", "0x01", "--stop", "0x03")
         self.assertEqual(out.count("FIELD_VERIFY"), 3)
-        self.assertEqual(self.bus.regs[0x20] & 7, 3)
+        self.assertEqual(self.bus.regs[0x08] & 7, 3)
 
     def test_invalid_regs_and_fields_fail_without_io(self):
         invalid = [
@@ -150,12 +150,12 @@ class CommandEnhancementTests(unittest.TestCase):
             ("read", "--reg", "-1"),
             ("read", "--name", "REG100"),
             ("read", "--reg", "0x20", "--name", "REG20"),
-            ("field-write", "--name", "CFG_OSC2_GMP_NUM", "--value", "8"),
-            ("field-write-read", "--name", "CFG_OSC2_IDAC_IBIAS", "--value", "0x20"),
+            ("field-write", "--name", "CFG_OSC_SEL_TEST", "--value", "8"),
+            ("field-write-read", "--name", "CFG_OSC_IDAC_IBIAS", "--value", "0x20"),
             ("sweep", "--reg", "0x20", "--start", "0", "--stop", "0x100"),
             ("sweep", "--reg", "0x20", "--start", "0", "--stop", "4", "--step", "-1"),
             ("sweep", "--reg", "0x20", "--start", "0", "--stop", "4", "--step", "0"),
-            ("field-sweep", "--name", "CFG_OSC2_GMP_NUM", "--start", "0", "--stop", "8"),
+            ("field-sweep", "--name", "CFG_OSC_SEL_TEST", "--start", "0", "--stop", "8"),
             ("write", "--reg", "0x20", "--value", "0xGG"),
         ]
         for cmd in invalid:
@@ -168,15 +168,15 @@ class CommandEnhancementTests(unittest.TestCase):
     def test_invalid_field_direct_api_never_writes(self):
         chip = ChipSpi()
         with self.assertRaises(ValueError):
-            chip.write_field("CFG_OSC2_GMP_NUM", 8)
+            chip.write_field("CFG_OSC_SEL_TEST", 8)
         with self.assertRaises(ValueError):
             chip.write_reg(0x20, 256)
         with self.assertRaises(ValueError):
-            chip.sweep_field("CFG_OSC2_GMP_NUM", 1, 9, 1)
+            chip.sweep_field("CFG_OSC_SEL_TEST", 1, 9, 1)
         self.assertEqual(self.bus.frames, [])
 
     def test_shadow_and_dry_run_incompatible(self):
-        _, err = self.run_cli("field-write", "--name", "CFG_OSC2_GMP_NUM", "--value", "2", "--dry-run", "--use-shadow", error=True)
+        _, err = self.run_cli("field-write", "--name", "CFG_OSC_SEL_TEST", "--value", "2", "--dry-run", "--use-shadow", error=True)
         self.assertIn("cannot be combined", err)
         self.assertEqual(self.bus.frames, [])
 
@@ -197,9 +197,9 @@ class CommandEnhancementTests(unittest.TestCase):
                 self.assert_read_only()
 
     def test_field_read_yellow_name_and_order(self):
-        out, _ = self.run_cli("read", "--name", "CFG_OSC2_IDAC_IBIAS")
-        self.assertIn("\033[93mname=CFG_OSC2_IDAC_IBIAS<7:3>\033[0m", out)
-        self.assertIn("\033[93mreg=0xAC\033[0m", out)
+        out, _ = self.run_cli("read", "--name", "CFG_OSC_IDAC_IBIAS")
+        self.assertIn("\033[93mname=CFG_OSC_IDAC_IBIAS<4:0>\033[0m", out)
+        self.assertIn("\033[93mreg=0xB5\033[0m", out)
         for key in ("value_hex=0x15", "value_bin=2b10101", "value_dec=21"):
             self.assertIn("\033[93m"+key+"\033[0m", out)
         self.assertLess(out.index("value_hex="), out.index("value_bin="))

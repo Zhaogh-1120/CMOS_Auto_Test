@@ -1,0 +1,27 @@
+{
+  "source": "TO202605_UWBSAW_REGLIST_NEW(1).xlsx",
+  "source_sheet": "Sheet1",
+  "valid_registers": [
+    "REG05",
+    "REG06",
+    "REG07",
+    "REG08",
+    "REG09",
+    "REG0A",
+    "REG0B",
+    "REG0C",
+    "REG0D",
+    "REG0E",
+    "REG0F",
+    "REG10",
+    "REG11",
+    "REG12",
+    "REG13",
+    "REG14"
+  ],
+  "initial_default_values_reference_only": true,
+  "writes_on_startup": false,
+  "ind_cap_constraint": "CFG_OSC_IND_SWCAP_P == CFG_OSC_IND_SWCAP_N when swept",
+  "fields_count": 35,
+  "register_count": 16
+}

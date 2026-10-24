@@ -1,3 +1,44 @@
+# Changelog
+
+本文档记录 CMOS_Auto_Test 工程的主要功能变化。旧版工程、并联谐振打包版与 GitHub `main` 的文件内容均已用于比对；未将仅由缓存、历史实验文件或压缩包整理造成的差异描述为新功能。
+
+## [0.2.0] - 2026-10-24 — Parallel SAW Test Integration
+
+### Added — 并联谐振芯片适配
+- 在 `full_flow_test` 中引入并联谐振 SAW 芯片的寄存器映射：REG05–REG14 共 16 个地址、35 个 Field。
+- 关键扫描字段：`CFG_OSC_SWCAP` 为 REG05[3:0]；`CFG_OSC_IND_SWCAP_N` 与 `CFG_OSC_IND_SWCAP_P` 分别为 REG06[5:3] 和 REG06[2:0]；`CFG_OSC_IDAC_IBIAS` 为 REG07[4:0]。
+- 扫描 IND_CAP 时，同步设置 N/P 两个 Field（P=N），并保留同一寄存器的非目标位。
+- 新增并联寄存器映射核查脚本 `parallel_spi_readonly_check.py`；配置表中的默认值仅作为参考，不在 Case 启动时自动写入芯片。
+
+### Added — 自动扫描模板
+- `case_saw_pn_sweep_1param.py`：仅扫描 IND_CAP，当前预设 0/2/4/6/7，5 组。
+- `case_saw_pn_sweep_2param.py`：IBIAS × IND_CAP，当前预设 IBIAS=0/6/12/15、IND_CAP=0/4/7，12 组。
+- `case_saw_pn_sweep_3param.py`：IBIAS × SWCAP × IND_CAP，当前预设 4×4×3=48 组。
+- RANGE 扫描支持非整除时补上终点；支持 `--plan`（离线检查）、`--check-point`（单点）及完整扫描运行。
+- 运行前读取 REG05–REG14 的真实快照；只扫描指定字段，完成或异常时尝试恢复已写入的寄存器，再读取全部寄存器进行一致性检查。
+
+### Added — 测量报告与分析
+- 在保留原有相噪测量、CSV/PNG、单点 Excel 和汇总 Excel 的基础上，新增 `pn_comparison.xlsx`。
+- `Overview` 每组数据一行，最后一列嵌入该组的**原始 PNG** 相噪截图；不进行有损 JPEG 转码。
+- 新增 `PN_Gallery`、`PN_Overlay`、`Raw_PN`、`Test_Info` 页面；相噪曲线叠加使用采集的真实频偏/相噪数据。
+- 保留用于固定参数分析和 Top N 排名的既有汇总报表；新增终端文件链接辅助模块。
+- 新增针对并联芯片迁移、相噪对比 Excel 和终端链接的离线测试。
+
+### Preserved — 兼容性
+- 保留原有 Ginkgo USB-SPI 两帧式 Set Address / Write Data / Read Data 协议。
+- 保留 E5052B 的相噪、载波、Jitter、原始曲线和截图采集接口，以及 `outputs/fullflow/.../run_YYYYMMDD_HHMMSS/` 的保存结构。
+- 频率数据按仪器实际返回值保存；**增加 Excel 显示位数不代表仪器达到 1 Hz 测量分辨率**。
+
+### Validation and limitations — 验证与限制
+- 提供离线寄存器映射和三套扫描测试；实际 Ginkgo/E5052B 联机表现需在 Windows 实验环境中验证。
+- 开启截图时，若仪器截图获取失败，相关 Case 仍可能因截图缺失而失败；不能将离线测试通过解释为截图链路已在所有工作点通过。
+- `main.py` 的通用 `field-sweep` 与三套 Case 的“非整除补终点”规则可能不同，使用时以对应命令生成的计划为准。
+- 公开发布前请确认寄存器定义、原始 Excel、仪器局域网配置及实验数据是否具有发布权限；不要将 `outputs/`、日志、缓存及未授权设计资料提交到公开仓库。
+
+---
+
+## 历史记录 — 2026-10-22（原工程 SPI Register Access Enhancement）
+
 # Changelog — 2026-10-22
 
 ## Unreleased: SPI Register Access Enhancement

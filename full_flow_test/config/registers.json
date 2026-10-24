@@ -1,3 +1,98 @@
 {
-  "REG20": {"addr": 32, "desc": "Example register from current discussion"}
+  "REG05": {
+    "addr": 5,
+    "desc": "page_00_05 (parallel SAW, Excel row 2)",
+    "default_hex": "0x08",
+    "reserved_default_bits": "0x00"
+  },
+  "REG06": {
+    "addr": 6,
+    "desc": "page_00_06 (parallel SAW, Excel row 10)",
+    "default_hex": "0x1B",
+    "reserved_default_bits": "0x00"
+  },
+  "REG07": {
+    "addr": 7,
+    "desc": "page_00_07 (parallel SAW, Excel row 18)",
+    "default_hex": "0x0D",
+    "reserved_default_bits": "0x00"
+  },
+  "REG08": {
+    "addr": 8,
+    "desc": "page_00_08 (parallel SAW, Excel row 26)",
+    "default_hex": "0x48",
+    "reserved_default_bits": "0x00"
+  },
+  "REG09": {
+    "addr": 9,
+    "desc": "page_00_09 (parallel SAW, Excel row 34)",
+    "default_hex": "0x88",
+    "reserved_default_bits": "0x00"
+  },
+  "REG0A": {
+    "addr": 10,
+    "desc": "page_00_0a (parallel SAW, Excel row 42)",
+    "default_hex": "0x0F",
+    "reserved_default_bits": "0x00"
+  },
+  "REG0B": {
+    "addr": 11,
+    "desc": "page_00_0b (parallel SAW, Excel row 50)",
+    "default_hex": "0x43",
+    "reserved_default_bits": "0x00"
+  },
+  "REG0C": {
+    "addr": 12,
+    "desc": "page_00_0c (parallel SAW, Excel row 58)",
+    "default_hex": "0x98",
+    "reserved_default_bits": "0x00"
+  },
+  "REG0D": {
+    "addr": 13,
+    "desc": "page_00_0d (parallel SAW, Excel row 66)",
+    "default_hex": "0x98",
+    "reserved_default_bits": "0x00"
+  },
+  "REG0E": {
+    "addr": 14,
+    "desc": "page_00_0e (parallel SAW, Excel row 74)",
+    "default_hex": "0x88",
+    "reserved_default_bits": "0x00"
+  },
+  "REG0F": {
+    "addr": 15,
+    "desc": "page_00_0f (parallel SAW, Excel row 82)",
+    "default_hex": "0x89",
+    "reserved_default_bits": "0x00"
+  },
+  "REG10": {
+    "addr": 16,
+    "desc": "page_00_10 (parallel SAW, Excel row 90)",
+    "default_hex": "0x2E",
+    "reserved_default_bits": "0x00"
+  },
+  "REG11": {
+    "addr": 17,
+    "desc": "page_00_11 (parallel SAW, Excel row 98)",
+    "default_hex": "0x1A",
+    "reserved_default_bits": "0x00"
+  },
+  "REG12": {
+    "addr": 18,
+    "desc": "page_00_12 (parallel SAW, Excel row 106)",
+    "default_hex": "0x02",
+    "reserved_default_bits": "0x00"
+  },
+  "REG13": {
+    "addr": 19,
+    "desc": "page_00_13 (parallel SAW, Excel row 114)",
+    "default_hex": "0x13",
+    "reserved_default_bits": "0x00"
+  },
+  "REG14": {
+    "addr": 20,
+    "desc": "page_00_14 (parallel SAW, Excel row 122)",
+    "default_hex": "0x1F",
+    "reserved_default_bits": "0x00"
+  }
 }

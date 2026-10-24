@@ -24,7 +24,7 @@ DEBUG = False
 # CONTINUE_ON_ERROR:
 # False = stop the whole case immediately when one step fails
 # True  = record the failure and continue remaining steps
-CONTINUE_ON_ERROR = False
+CONTINUE_ON_ERROR = True
 
 CASE_POLICY = {
     'DEBUG': DEBUG,
@@ -44,15 +44,15 @@ CASE_DESC = 'nested discrete multi-field sweep with E5052B capture'
 PRESETS = []
 
 # ----- Full-flow switches -----
-ENABLE_MEASUREMENT = True
+ENABLE_MEASUREMENT = False
 SAVE_SCREENSHOT = False
-SAVE_CSV = True
-SAVE_EXCEL = True
+SAVE_CSV = False
+SAVE_EXCEL = False
 DELAY_BEFORE_MEASUREMENT_S = 0.0
 
 
 # ----- SPI scan setup -----
-FIELD_SPECS = {'CFG_OSC2_GMP_NUM': {'values': [0, 3, 4, 7]}, 'CFG_OSC2_TEST_BUF_IBIAS': {'values': [2, 8, 15]}}
+FIELD_SPECS = {'CFG_OSC2_GMP_NUM': {'values': [7, 8]}, 'CFG_OSC2_TEST_BUF_IBIAS': {'values': [10, 12]}}
 
 
 def main():
